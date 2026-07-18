@@ -1,0 +1,15 @@
+import versionInfo from "../version.json";
+
+export const JS_BADGE_TYPE = "js-badge";
+export const JS_BADGE_NAME = "JS Badge";
+export const JS_BADGE_VERSION = versionInfo.version;
+
+export const TEMPLATE_REGEX = /^\s*\[\[\[\s*([\s\S]*?)\s*\]\]\]\s*$/;
+
+export const DEFAULT_STYLES = Object.freeze({
+  iconColor: "var(--state-icon-color)",
+  backgroundColor:
+    "var(--ha-card-background, var(--card-background-color, white))",
+  primaryColor: "var(--primary-text-color)",
+  secondaryColor: "var(--secondary-text-color)",
+});
