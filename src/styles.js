@@ -86,6 +86,15 @@ export const BADGE_STYLES = `
     line-height: 0;
   }
 
+  .badge.icon-only {
+    gap: 0;
+    padding: 0;
+  }
+
+  .badge.icon-only .icon {
+    margin: 0;
+  }
+
   ha-icon,
   ha-state-icon {
     --mdc-icon-size: var(--ha-badge-icon-size, 18px);

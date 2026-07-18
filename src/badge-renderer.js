@@ -40,11 +40,13 @@ function appendIcon(iconContainer, model, hass) {
 }
 
 export function renderBadge(shadowRoot, model, hass) {
+  const textMarkup = createTextMarkup(model);
+
   shadowRoot.innerHTML = `
     <style>${BADGE_STYLES}</style>
-    <div class="badge">
+    <div class="badge${textMarkup ? "" : " icon-only"}">
       <span class="icon"></span>
-      ${createTextMarkup(model)}
+      ${textMarkup}
     </div>
   `;
 

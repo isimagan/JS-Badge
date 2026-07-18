@@ -19,7 +19,7 @@ function formatEntityState(config, hass, stateObject) {
 
 // version.json
 var version_default = {
-  version: "1.0.0"
+  version: "1.0.1"
 };
 
 // src/constants.js
@@ -267,6 +267,15 @@ var BADGE_STYLES = `
     line-height: 0;
   }
 
+  .badge.icon-only {
+    gap: 0;
+    padding: 0;
+  }
+
+  .badge.icon-only .icon {
+    margin: 0;
+  }
+
   ha-icon,
   ha-state-icon {
     --mdc-icon-size: var(--ha-badge-icon-size, 18px);
@@ -300,11 +309,12 @@ function appendIcon(iconContainer, model, hass) {
   iconContainer.remove();
 }
 function renderBadge(shadowRoot, model, hass) {
+  const textMarkup = createTextMarkup(model);
   shadowRoot.innerHTML = `
     <style>${BADGE_STYLES}</style>
-    <div class="badge">
+    <div class="badge${textMarkup ? "" : " icon-only"}">
       <span class="icon"></span>
-      ${createTextMarkup(model)}
+      ${textMarkup}
     </div>
   `;
   const badge = shadowRoot.querySelector(".badge");
