@@ -197,80 +197,42 @@ badges:
     entity: sensor.robotvacuum_battery
     icon_color: orange
     background_color: rgba(255, 165, 0, 0.12)
-    border_color: orange
-    name_color: var(--secondary-text-color)
-    label_color: var(--primary-text-color)
+    primary_color: var(--primary-text-color)
+    secondary_color: var(--secondary-text-color)
 ```
 
 Colors can also use JavaScript templates.
 
-## Layout
-
-```yaml
-badges:
-  - type: custom:js-badge
-    entity: sensor.robotvacuum_battery
-    height: 52px
-    border_radius: 26px
-    padding: 0 20px 0 16px
-    gap: 12px
-    icon_size: 28px
-```
+## Visibility
 
 Parts of the badge can be hidden:
 
 ```yaml
 show_icon: false
-show_name: false
-show_label: false
-```
-
-## Entity and template errors
-
-```yaml
-badges:
-  - type: custom:js-badge
-    entity: sensor.example
-    missing_entity_label: Missing entity
-    unknown_label: Unknown
-    unavailable_label: Unavailable
-    template_error_label: Template error
-    hide_if_missing: false
-    hide_if_unknown: false
-    hide_if_unavailable: false
+show_primary: false
+show_secondary: false
 ```
 
 ## Options
 
+Add these options in Home Assistant's YAML/code editor for the badge.
+
 | Option | Default | Description |
 | --- | --- | --- |
 | `entity` | optional | Home Assistant entity ID |
-| `name` / `primary` | entity friendly name | Smaller name line |
-| `label` / `secondary` | formatted entity state | Bold label/state line |
+| `primary` / `label` | formatted entity state | Main state/value line |
+| `secondary` / `name` | entity friendly name | Smaller name line |
 | `icon` | entity icon | Material Design icon |
-| `color` / `icon_color` | state icon color | Icon color |
+| `icon_color` / `color` | state icon color | Icon color |
 | `background_color` | card background | Badge background |
-| `border_color` | divider color | Border color |
-| `name_color` / `primary_color` | secondary text color | Name color |
-| `label_color` / `secondary_color` | primary text color | Label color |
+| `primary_color` / `label_color` | primary text color | Main text color |
+| `secondary_color` / `name_color` | secondary text color | Smaller text color |
 | `show_icon` | `true` | Show icon |
-| `show_name` | `true` | Show name |
-| `show_label` | `true` | Show label |
-| `height` | `48px` | Minimum height |
-| `border_radius` | `24px` | Border radius |
-| `padding` | `0 16px 0 14px` | Padding |
-| `gap` | `10px` | Icon/text gap |
-| `icon_size` | `24px` | Icon size |
+| `show_primary` / `show_label` | `true` | Show main text |
+| `show_secondary` / `show_name` | `true` | Show smaller text |
 | `tap_action` | `more-info` with entity | Tap action |
 | `hold_action` | `none` | Hold action |
 | `double_tap_action` | `none` | Double-tap action |
-| `missing_entity_label` | empty | Missing entity label |
-| `unknown_label` | `Unknown` | Unknown state label |
-| `unavailable_label` | `Unavailable` | Unavailable state label |
-| `template_error_label` | `Template error` | Template error text |
-| `hide_if_missing` | `false` | Hide when missing |
-| `hide_if_unknown` | `false` | Hide when unknown |
-| `hide_if_unavailable` | `false` | Hide when unavailable |
 
 ## Development
 
