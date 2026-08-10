@@ -9,6 +9,11 @@ export class JsBadge extends HTMLElement {
     this._config = {};
     this._hass = undefined;
     this._interactions = new BadgeInteractions(this);
+    this.connectedWhileHidden = true;
+  }
+
+  connectedCallback() {
+    this._render();
   }
 
   setConfig(config) {
@@ -25,15 +30,41 @@ export class JsBadge extends HTMLElement {
     this._render();
   }
 
+  _isEditorPreview() {
+    return (
+      this.parentElement?.preview === true ||
+      Boolean(this.closest?.("hui-badge-edit-mode"))
+    );
+  }
+
+  _setBadgeVisibility(showBadge) {
+    const visible = showBadge || this._isEditorPreview();
+    const wasHidden = this.hidden;
+
+    this.hidden = !visible;
+
+    if (wasHidden !== this.hidden) {
+      this.dispatchEvent(
+        new CustomEvent("badge-visibility-changed", {
+          bubbles: true,
+          composed: true,
+          detail: { value: visible },
+        }),
+      );
+    }
+
+    return visible;
+  }
+
   _render() {
     if (!this.shadowRoot) {
       return;
     }
 
     const model = createBadgeModel(this._config, this._hass);
+    const visible = this._setBadgeVisibility(model.showBadge);
 
-    this.hidden = !model.showBadge;
-    if (!model.showBadge) {
+    if (!visible) {
       this.shadowRoot.replaceChildren();
       return;
     }

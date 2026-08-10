@@ -19,7 +19,7 @@ function formatEntityState(config, hass, stateObject) {
 
 // version.json
 var version_default = {
-  version: "1.1.0"
+  version: "1.1.1"
 };
 
 // src/constants.js
@@ -202,6 +202,10 @@ var BADGE_STYLES = `
   :host {
     display: inline-flex;
     vertical-align: middle;
+  }
+
+  :host([hidden]) {
+    display: none !important;
   }
 
   .badge {
@@ -547,6 +551,10 @@ var JsBadge = class extends HTMLElement {
     this._config = {};
     this._hass = void 0;
     this._interactions = new BadgeInteractions(this);
+    this.connectedWhileHidden = true;
+  }
+  connectedCallback() {
+    this._render();
   }
   setConfig(config) {
     if (!config || typeof config !== "object") {
@@ -559,13 +567,31 @@ var JsBadge = class extends HTMLElement {
     this._hass = hass;
     this._render();
   }
+  _isEditorPreview() {
+    return this.parentElement?.preview === true || Boolean(this.closest?.("hui-badge-edit-mode"));
+  }
+  _setBadgeVisibility(showBadge) {
+    const visible = showBadge || this._isEditorPreview();
+    const wasHidden = this.hidden;
+    this.hidden = !visible;
+    if (wasHidden !== this.hidden) {
+      this.dispatchEvent(
+        new CustomEvent("badge-visibility-changed", {
+          bubbles: true,
+          composed: true,
+          detail: { value: visible }
+        })
+      );
+    }
+    return visible;
+  }
   _render() {
     if (!this.shadowRoot) {
       return;
     }
     const model = createBadgeModel(this._config, this._hass);
-    this.hidden = !model.showBadge;
-    if (!model.showBadge) {
+    const visible = this._setBadgeVisibility(model.showBadge);
+    if (!visible) {
       this.shadowRoot.replaceChildren();
       return;
     }

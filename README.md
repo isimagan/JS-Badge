@@ -226,7 +226,8 @@ badges:
 
 In this example, the badge is only visible while `light.example` is on.
 `show_badge` is available in the YAML/code editor but is not added to new badge
-configurations automatically.
+configurations automatically. A hidden badge remains visible while the
+dashboard is in edit mode, so it can still be selected and configured.
 
 ## Options
 
