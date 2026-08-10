@@ -44,6 +44,7 @@ src/
 - Service calls using `perform-action`, `call-service` or `call_service`
 - Handling for missing, `unknown` and `unavailable` entities
 - Optional hiding when an entity is missing, unknown or unavailable
+- Boolean or JavaScript-controlled visibility for the entire badge
 
 ## Installation with HACS
 
@@ -213,6 +214,20 @@ show_primary: false
 show_secondary: false
 ```
 
+The entire badge can be hidden with `show_badge`. It defaults to `true` and
+accepts either a boolean or a JavaScript template that returns a boolean:
+
+```yaml
+badges:
+  - type: custom:js-badge
+    entity: light.example
+    show_badge: '[[[ return entity.state === "on"; ]]]'
+```
+
+In this example, the badge is only visible while `light.example` is on.
+`show_badge` is available in the YAML/code editor but is not added to new badge
+configurations automatically.
+
 ## Options
 
 Add these options in Home Assistant's YAML/code editor for the badge.
@@ -227,6 +242,7 @@ Add these options in Home Assistant's YAML/code editor for the badge.
 | `background_color` | card background | Badge background |
 | `primary_color` / `label_color` | primary text color | Main text color |
 | `secondary_color` / `name_color` | secondary text color | Smaller text color |
+| `show_badge` | `true` | Show the entire badge; accepts a boolean or JavaScript returning a boolean |
 | `show_icon` | `true` | Show icon |
 | `show_primary` / `show_label` | `true` | Show main text |
 | `show_secondary` / `show_name` | `true` | Show smaller text |

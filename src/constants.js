@@ -1,4 +1,4 @@
-import versionInfo from "../version.json";
+import versionInfo from "../version.json" with { type: "json" };
 
 export const JS_BADGE_TYPE = "js-badge";
 export const JS_BADGE_NAME = "JS Badge";

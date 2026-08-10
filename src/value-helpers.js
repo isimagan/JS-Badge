@@ -30,6 +30,28 @@ export function readBooleanValue(value, fallback, context) {
   return Boolean(evaluated);
 }
 
+export function readStrictBooleanValue(
+  value,
+  fallback,
+  context,
+  optionName = "value",
+) {
+  if (value === undefined || value === null) {
+    return fallback;
+  }
+
+  const evaluated = readValue(value, context);
+
+  if (typeof evaluated === "boolean") {
+    return evaluated;
+  }
+
+  console.warn(
+    `[js-badge] ${optionName} must be a boolean or a JavaScript template that returns a boolean.`,
+  );
+  return fallback;
+}
+
 export function normalizeTextValue(value) {
   if (value === undefined || value === null || value === false) {
     return "";
