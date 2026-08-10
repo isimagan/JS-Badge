@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## v1.1.2
+
+### Fixed
+
+- Hidden badges now reappear immediately when dashboard edit mode is opened.
+
 ## v1.1.1
 
 ### Fixed
