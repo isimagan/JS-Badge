@@ -10,10 +10,18 @@ export class JsBadge extends HTMLElement {
     this._hass = undefined;
     this._interactions = new BadgeInteractions(this);
     this.connectedWhileHidden = true;
+    this._editorContextObserver = undefined;
+    this._editorPreview = false;
   }
 
   connectedCallback() {
+    this._observeEditorContext();
     this._render();
+  }
+
+  disconnectedCallback() {
+    this._editorContextObserver?.disconnect();
+    this._editorContextObserver = undefined;
   }
 
   setConfig(config) {
@@ -37,10 +45,33 @@ export class JsBadge extends HTMLElement {
     );
   }
 
+  _observeEditorContext() {
+    this._editorContextObserver?.disconnect();
+
+    const root = this.getRootNode?.();
+    if (!root || typeof MutationObserver === "undefined") {
+      return;
+    }
+
+    this._editorContextObserver = new MutationObserver(() => {
+      const editorPreview = this._isEditorPreview();
+
+      if (editorPreview !== this._editorPreview) {
+        this._render();
+      }
+    });
+    this._editorContextObserver.observe(root, {
+      childList: true,
+      subtree: true,
+    });
+  }
+
   _setBadgeVisibility(showBadge) {
-    const visible = showBadge || this._isEditorPreview();
+    const editorPreview = this._isEditorPreview();
+    const visible = showBadge || editorPreview;
     const wasHidden = this.hidden;
 
+    this._editorPreview = editorPreview;
     this.hidden = !visible;
 
     if (wasHidden !== this.hidden) {

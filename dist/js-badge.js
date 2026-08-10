@@ -19,7 +19,7 @@ function formatEntityState(config, hass, stateObject) {
 
 // version.json
 var version_default = {
-  version: "1.1.1"
+  version: "1.1.2"
 };
 
 // src/constants.js
@@ -552,9 +552,16 @@ var JsBadge = class extends HTMLElement {
     this._hass = void 0;
     this._interactions = new BadgeInteractions(this);
     this.connectedWhileHidden = true;
+    this._editorContextObserver = void 0;
+    this._editorPreview = false;
   }
   connectedCallback() {
+    this._observeEditorContext();
     this._render();
+  }
+  disconnectedCallback() {
+    this._editorContextObserver?.disconnect();
+    this._editorContextObserver = void 0;
   }
   setConfig(config) {
     if (!config || typeof config !== "object") {
@@ -570,9 +577,28 @@ var JsBadge = class extends HTMLElement {
   _isEditorPreview() {
     return this.parentElement?.preview === true || Boolean(this.closest?.("hui-badge-edit-mode"));
   }
+  _observeEditorContext() {
+    this._editorContextObserver?.disconnect();
+    const root = this.getRootNode?.();
+    if (!root || typeof MutationObserver === "undefined") {
+      return;
+    }
+    this._editorContextObserver = new MutationObserver(() => {
+      const editorPreview = this._isEditorPreview();
+      if (editorPreview !== this._editorPreview) {
+        this._render();
+      }
+    });
+    this._editorContextObserver.observe(root, {
+      childList: true,
+      subtree: true
+    });
+  }
   _setBadgeVisibility(showBadge) {
-    const visible = showBadge || this._isEditorPreview();
+    const editorPreview = this._isEditorPreview();
+    const visible = showBadge || editorPreview;
     const wasHidden = this.hidden;
+    this._editorPreview = editorPreview;
     this.hidden = !visible;
     if (wasHidden !== this.hidden) {
       this.dispatchEvent(

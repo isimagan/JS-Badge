@@ -115,3 +115,41 @@ test("show_badge false remains visible in dashboard editor preview", () => {
   assert.equal(visibilityEvent.type, "badge-visibility-changed");
   assert.deepEqual(visibilityEvent.detail, { value: true });
 });
+
+test("entering dashboard edit mode re-renders a hidden badge", () => {
+  let observerCallback;
+  const originalMutationObserver = globalThis.MutationObserver;
+  globalThis.MutationObserver = class {
+    constructor(callback) {
+      observerCallback = callback;
+    }
+
+    observe() {}
+
+    disconnect() {}
+  };
+
+  try {
+    const badge = Object.create(JsBadge.prototype);
+    let renderCount = 0;
+
+    badge._editorContextObserver = undefined;
+    badge._editorPreview = false;
+    badge.parentElement = { preview: false };
+    badge.closest = () => null;
+    badge.getRootNode = () => ({});
+    badge._render = () => {
+      renderCount += 1;
+      badge._editorPreview = badge._isEditorPreview();
+    };
+
+    badge._observeEditorContext();
+    badge.parentElement.preview = true;
+    observerCallback();
+
+    assert.equal(renderCount, 1);
+    assert.equal(badge._editorPreview, true);
+  } finally {
+    globalThis.MutationObserver = originalMutationObserver;
+  }
+});
