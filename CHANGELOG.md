@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## v1.1.1
+
+### Fixed
+
+- Fixed `show_badge: false` so it hides the badge outside dashboard edit mode.
+
 ## v1.1.0
 
 ### Added

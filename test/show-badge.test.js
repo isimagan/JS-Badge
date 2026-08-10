@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { BADGE_STYLES } from "../src/styles.js";
 import { readStrictBooleanValue } from "../src/value-helpers.js";
 
 globalThis.HTMLElement = class {};
@@ -74,6 +75,9 @@ test("the badge host and rendered content are hidden when show_badge is false", 
   badge._config = { show_badge: false };
   badge._hass = hass;
   badge.hidden = false;
+  badge.parentElement = null;
+  badge.closest = () => null;
+  badge.dispatchEvent = () => {};
   badge.shadowRoot = {
     replaceChildren() {
       contentCleared = true;
@@ -84,4 +88,30 @@ test("the badge host and rendered content are hidden when show_badge is false", 
 
   assert.equal(badge.hidden, true);
   assert.equal(contentCleared, true);
+});
+
+test("hidden badges are forced out of the layout", () => {
+  assert.match(
+    BADGE_STYLES,
+    /:host\(\[hidden\]\)\s*{\s*display:\s*none\s*!important;/,
+  );
+});
+
+test("show_badge false remains visible in dashboard editor preview", () => {
+  let visibilityEvent;
+  const badge = Object.create(JsBadge.prototype);
+
+  badge.hidden = true;
+  badge.parentElement = { preview: true };
+  badge.closest = () => null;
+  badge.dispatchEvent = (event) => {
+    visibilityEvent = event;
+  };
+
+  const visible = badge._setBadgeVisibility(false);
+
+  assert.equal(visible, true);
+  assert.equal(badge.hidden, false);
+  assert.equal(visibilityEvent.type, "badge-visibility-changed");
+  assert.deepEqual(visibilityEvent.detail, { value: true });
 });

@@ -4,6 +4,10 @@ export const BADGE_STYLES = `
     vertical-align: middle;
   }
 
+  :host([hidden]) {
+    display: none !important;
+  }
+
   .badge {
     --badge-color: var(--js-badge-icon-color);
     --ha-ripple-color: var(--badge-color);
