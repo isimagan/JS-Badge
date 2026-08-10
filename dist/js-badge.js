@@ -92,6 +92,19 @@ function readBooleanValue(value, fallback, context) {
   }
   return Boolean(evaluated);
 }
+function readStrictBooleanValue(value, fallback, context, optionName = "value") {
+  if (value === void 0 || value === null) {
+    return fallback;
+  }
+  const evaluated = readValue(value, context);
+  if (typeof evaluated === "boolean") {
+    return evaluated;
+  }
+  console.warn(
+    `[js-badge] ${optionName} must be a boolean or a JavaScript template that returns a boolean.`
+  );
+  return fallback;
+}
 function normalizeTextValue(value) {
   if (value === void 0 || value === null || value === false) {
     return "";
@@ -158,6 +171,12 @@ function createBadgeModel(config, hass) {
   const read = (value) => readValue(value, context);
   return {
     stateObject,
+    showBadge: readStrictBooleanValue(
+      config.show_badge,
+      true,
+      context,
+      "show_badge"
+    ),
     primary: normalizeTextValue(
       getPrimary(config, hass, stateObject, read)
     ),
@@ -545,6 +564,11 @@ var JsBadge = class extends HTMLElement {
       return;
     }
     const model = createBadgeModel(this._config, this._hass);
+    this.hidden = !model.showBadge;
+    if (!model.showBadge) {
+      this.shadowRoot.replaceChildren();
+      return;
+    }
     const badge = renderBadge(this.shadowRoot, model, this._hass);
     if (!badge) {
       return;

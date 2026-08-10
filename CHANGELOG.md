@@ -2,6 +2,12 @@
 
 All notable changes to this project are documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added `show_badge` for boolean or JavaScript-controlled badge visibility.
+
 ## v1.0.1
 
 ### Fixed

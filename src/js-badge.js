@@ -31,6 +31,13 @@ export class JsBadge extends HTMLElement {
     }
 
     const model = createBadgeModel(this._config, this._hass);
+
+    this.hidden = !model.showBadge;
+    if (!model.showBadge) {
+      this.shadowRoot.replaceChildren();
+      return;
+    }
+
     const badge = renderBadge(this.shadowRoot, model, this._hass);
 
     if (!badge) {

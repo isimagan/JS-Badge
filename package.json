@@ -6,6 +6,7 @@
   "scripts": {
     "build": "esbuild src/index.js --bundle --format=esm --target=es2022 --legal-comments=none --outfile=dist/js-badge.js",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true }); require('node:fs').mkdirSync('dist');\"",
+    "test": "node --test",
     "watch": "npm run build -- --watch"
   },
   "devDependencies": {

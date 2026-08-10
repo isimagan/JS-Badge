@@ -3,6 +3,7 @@ import { getBadgeStyleVariables } from "./badge-styles.js";
 import {
   normalizeTextValue,
   readBooleanValue,
+  readStrictBooleanValue,
   readValue,
 } from "./value-helpers.js";
 
@@ -43,6 +44,12 @@ export function createBadgeModel(config, hass) {
 
   return {
     stateObject,
+    showBadge: readStrictBooleanValue(
+      config.show_badge,
+      true,
+      context,
+      "show_badge",
+    ),
     primary: normalizeTextValue(
       getPrimary(config, hass, stateObject, read),
     ),
