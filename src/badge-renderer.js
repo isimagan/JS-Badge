@@ -1,16 +1,16 @@
 import { applyBadgeStyles } from "./badge-styles.js";
 import { BADGE_STYLES } from "./styles.js";
-import { escapeHtml } from "./value-helpers.js";
+import { decodeAndEscapeHtml } from "./value-helpers.js";
 
 function createTextMarkup(model) {
   const secondaryMarkup =
     model.showSecondary && model.secondary
-      ? `<span class="label">${escapeHtml(model.secondary)}</span>`
+      ? `<span class="label">${decodeAndEscapeHtml(model.secondary)}</span>`
       : "";
 
   const primaryMarkup =
     model.showPrimary && model.primary
-      ? `<span class="content">${escapeHtml(model.primary)}</span>`
+      ? `<span class="content">${decodeAndEscapeHtml(model.primary)}</span>`
       : "";
 
   if (!secondaryMarkup && !primaryMarkup) {
