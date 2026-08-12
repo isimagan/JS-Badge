@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## v1.1.3
+
+### Fixed
+
+- HTML entities returned by JavaScript text templates are now decoded while
+  HTML elements remain safely escaped.
+
 ## v1.1.2
 
 ### Fixed

@@ -68,3 +68,19 @@ export function escapeHtml(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+export function decodeHtmlEntities(value, documentObject = globalThis.document) {
+  const normalizedValue = normalizeTextValue(value);
+
+  if (!normalizedValue.includes("&") || !documentObject?.createElement) {
+    return normalizedValue;
+  }
+
+  const decoder = documentObject.createElement("textarea");
+  decoder.innerHTML = normalizedValue;
+  return decoder.value;
+}
+
+export function decodeAndEscapeHtml(value, documentObject = globalThis.document) {
+  return escapeHtml(decodeHtmlEntities(value, documentObject));
+}

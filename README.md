@@ -120,6 +120,13 @@ badges:
     icon: "[[[ return Number(entity.state) < 30 ? 'mdi:battery-alert' : 'mdi:robot-vacuum'; ]]]"
 ```
 
+HTML entities in returned text are supported for compatibility with custom
+cards that use them as separators. HTML elements are still displayed as text.
+
+```yaml
+label: "[[[ return `On &middot; Ready`; ]]]"
+```
+
 ### Template variables
 
 | Variable | Description |

@@ -19,7 +19,7 @@ function formatEntityState(config, hass, stateObject) {
 
 // version.json
 var version_default = {
-  version: "1.1.2"
+  version: "1.1.3"
 };
 
 // src/constants.js
@@ -113,6 +113,18 @@ function normalizeTextValue(value) {
 }
 function escapeHtml(value) {
   return normalizeTextValue(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+}
+function decodeHtmlEntities(value, documentObject = globalThis.document) {
+  const normalizedValue = normalizeTextValue(value);
+  if (!normalizedValue.includes("&") || !documentObject?.createElement) {
+    return normalizedValue;
+  }
+  const decoder = documentObject.createElement("textarea");
+  decoder.innerHTML = normalizedValue;
+  return decoder.value;
+}
+function decodeAndEscapeHtml(value, documentObject = globalThis.document) {
+  return escapeHtml(decodeHtmlEntities(value, documentObject));
 }
 
 // src/badge-styles.js
@@ -308,8 +320,8 @@ var BADGE_STYLES = `
 
 // src/badge-renderer.js
 function createTextMarkup(model) {
-  const secondaryMarkup = model.showSecondary && model.secondary ? `<span class="label">${escapeHtml(model.secondary)}</span>` : "";
-  const primaryMarkup = model.showPrimary && model.primary ? `<span class="content">${escapeHtml(model.primary)}</span>` : "";
+  const secondaryMarkup = model.showSecondary && model.secondary ? `<span class="label">${decodeAndEscapeHtml(model.secondary)}</span>` : "";
+  const primaryMarkup = model.showPrimary && model.primary ? `<span class="content">${decodeAndEscapeHtml(model.primary)}</span>` : "";
   if (!secondaryMarkup && !primaryMarkup) {
     return "";
   }
