@@ -22,7 +22,7 @@ function formatEntityState(config, hass, stateObject) {
 
 // version.json
 var version_default = {
-  version: "1.1.3"
+  version: "1.2.0"
 };
 
 // src/constants.js
