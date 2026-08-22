@@ -9,11 +9,14 @@ function formatEntityState(config, hass, stateObject) {
   if (!stateObject) {
     return config.entity ? "Entity not found" : "";
   }
+  const state = stateObject.state ?? "";
+  const unit = stateObject.attributes?.unit_of_measurement;
+  if (config.show_unit === false && unit) {
+    return state;
+  }
   if (hass?.formatEntityState) {
     return hass.formatEntityState(stateObject);
   }
-  const state = stateObject.state ?? "";
-  const unit = stateObject.attributes?.unit_of_measurement;
   return unit ? `${state} ${unit}` : state;
 }
 

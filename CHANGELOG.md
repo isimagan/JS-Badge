@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## Unreleased
+
+### Added
+
+- Added `show_unit`, which defaults to `true` and can hide the unit of
+  measurement from the default state value.
+
 ## v1.1.3
 
 ### Fixed

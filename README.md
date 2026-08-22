@@ -78,6 +78,18 @@ By default, the badge uses the entity's:
 - formatted state as the label
 - state icon as the icon
 
+The formatted state includes the entity's unit of measurement by default. Set
+`show_unit: false` to hide it:
+
+```yaml
+badges:
+  - type: custom:js-badge
+    entity: sensor.feel24_visitors
+    show_unit: false
+```
+
+For example, `4 visitors` is then displayed as `4`.
+
 ## Custom text and icon
 
 ```yaml
@@ -254,6 +266,7 @@ Add these options in Home Assistant's YAML/code editor for the badge.
 | `show_icon` | `true` | Show icon |
 | `show_primary` / `show_label` | `true` | Show main text |
 | `show_secondary` / `show_name` | `true` | Show smaller text |
+| `show_unit` | `true` | Show the entity's unit of measurement in the default state value |
 | `tap_action` | `more-info` with entity | Tap action |
 | `hold_action` | `none` | Hold action |
 | `double_tap_action` | `none` | Double-tap action |
