@@ -37,10 +37,19 @@ function getIcon(config, stateObject, read) {
   return read(value);
 }
 
+function hasConfiguredIcon(config) {
+  return config.icon !== undefined && config.icon !== null;
+}
+
 export function createBadgeModel(config, hass) {
   const stateObject = getStateObject(config, hass);
   const context = createContext(config, hass, stateObject);
   const read = (value) => readValue(value, context);
+  const showEntityPicture = readBooleanValue(
+    config.show_entity_picture,
+    true,
+    context,
+  );
 
   return {
     stateObject,
@@ -55,6 +64,11 @@ export function createBadgeModel(config, hass) {
     ),
     secondary: normalizeTextValue(getSecondary(config, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
+    entityPicture: normalizeTextValue(
+      !hasConfiguredIcon(config) && showEntityPicture
+        ? stateObject?.attributes?.entity_picture
+        : "",
+    ),
     showIcon: readBooleanValue(config.show_icon, true, context),
     showPrimary: readBooleanValue(
       config.show_primary ?? config.show_label,

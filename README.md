@@ -37,6 +37,7 @@ src/
 
 - Optional Home Assistant entity
 - Entity name, formatted state and entity icon as defaults
+- Automatic entity picture support with entity icon fallback
 - Custom name, label, icon, colors and layout
 - JavaScript templates using `[[[ return ... ]]]`
 - Tap, hold and double-tap actions
@@ -78,6 +79,18 @@ By default, the badge uses the entity's:
 - formatted state as the label
 - state icon as the icon
 
+The formatted state includes the entity's unit of measurement by default. Set
+`show_unit: false` to hide it:
+
+```yaml
+badges:
+  - type: custom:js-badge
+    entity: sensor.feel24_visitors
+    show_unit: false
+```
+
+For example, `4 visitors` is then displayed as `4`.
+
 ## Custom text and icon
 
 ```yaml
@@ -96,6 +109,30 @@ name = primary
 label = secondary
 color = icon_color
 ```
+
+## Entity pictures and icons
+
+If the entity has an `entity_picture`, the badge uses it automatically. An
+explicitly configured `icon` takes priority over the entity picture:
+
+```yaml
+badges:
+  - type: custom:js-badge
+    entity: sensor.feel24_visitors
+    icon: mdi:ab-testing
+```
+
+Set `show_entity_picture: false` to use the entity's standard icon instead:
+
+```yaml
+badges:
+  - type: custom:js-badge
+    entity: sensor.feel24_visitors
+    show_entity_picture: false
+```
+
+The visual priority is an explicitly configured `icon`, then the entity
+picture, then the entity's standard icon. `show_icon: false` hides all three.
 
 ## Usage without an entity
 
@@ -252,8 +289,10 @@ Add these options in Home Assistant's YAML/code editor for the badge.
 | `secondary_color` / `name_color` | secondary text color | Smaller text color |
 | `show_badge` | `true` | Show the entire badge; accepts a boolean or JavaScript returning a boolean |
 | `show_icon` | `true` | Show icon |
+| `show_entity_picture` | `true` | Use the entity picture when available and no explicit `icon` is configured |
 | `show_primary` / `show_label` | `true` | Show main text |
 | `show_secondary` / `show_name` | `true` | Show smaller text |
+| `show_unit` | `true` | Show the entity's unit of measurement in the default state value |
 | `tap_action` | `more-info` with entity | Tap action |
 | `hold_action` | `none` | Hold action |
 | `double_tap_action` | `none` | Double-tap action |

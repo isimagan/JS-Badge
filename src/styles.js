@@ -104,4 +104,12 @@ export const BADGE_STYLES = `
     --mdc-icon-size: var(--ha-badge-icon-size, 18px);
     color: var(--badge-color);
   }
+
+  .entity-picture {
+    display: block;
+    width: var(--ha-badge-icon-size, 18px);
+    height: var(--ha-badge-icon-size, 18px);
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;

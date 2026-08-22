@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## v1.2.0
+
+### Added
+
+- Added `show_unit`, which defaults to `true` and can hide the unit of
+  measurement from the default state value.
+- Added automatic entity picture display and `show_entity_picture`, which
+  defaults to `true`. An explicitly configured `icon` takes priority.
+
 ## v1.1.3
 
 ### Fixed
