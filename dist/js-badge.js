@@ -5,13 +5,13 @@ function getStateObject(config, hass) {
   }
   return hass.states[config.entity];
 }
-function formatEntityState(config, hass, stateObject) {
+function formatEntityState(config, hass, stateObject, showUnit = config.show_unit !== false) {
   if (!stateObject) {
     return config.entity ? "Entity not found" : "";
   }
   const state = stateObject.state ?? "";
   const unit = stateObject.attributes?.unit_of_measurement;
-  if (config.show_unit === false && unit) {
+  if (!showUnit && unit) {
     return state;
   }
   if (hass?.formatEntityState) {
@@ -22,7 +22,7 @@ function formatEntityState(config, hass, stateObject) {
 
 // version.json
 var version_default = {
-  version: "1.2.0"
+  version: "2.0.0"
 };
 
 // src/constants.js
@@ -134,7 +134,7 @@ function decodeAndEscapeHtml(value, documentObject = globalThis.document) {
 function getBadgeStyleVariables(config, context) {
   return {
     "--js-badge-icon-color": readStyleValue(
-      config.icon_color ?? config.color,
+      config.color,
       DEFAULT_STYLES.iconColor,
       context
     ),
@@ -165,15 +165,15 @@ function applyBadgeStyles(badge, styleVariables) {
 function createContext(config, hass, stateObject) {
   return { config, hass, stateObject };
 }
-function getPrimary(config, hass, stateObject, read) {
-  const value = config.primary ?? config.label;
+function getLabel(config, hass, stateObject, showUnit, read) {
+  const value = config.label;
   if (value !== void 0) {
     return read(value);
   }
-  return formatEntityState(config, hass, stateObject);
+  return formatEntityState(config, hass, stateObject, showUnit);
 }
-function getSecondary(config, stateObject, read) {
-  const value = config.secondary ?? config.name ?? stateObject?.attributes?.friendly_name ?? config.entity ?? "";
+function getName(config, stateObject, read) {
+  const value = config.name ?? stateObject?.attributes?.friendly_name ?? config.entity ?? "";
   return read(value);
 }
 function getIcon(config, stateObject, read) {
@@ -192,6 +192,7 @@ function createBadgeModel(config, hass) {
     true,
     context
   );
+  const showUnit = readBooleanValue(config.show_unit, true, context);
   return {
     stateObject,
     showBadge: readStrictBooleanValue(
@@ -200,25 +201,17 @@ function createBadgeModel(config, hass) {
       context,
       "show_badge"
     ),
-    primary: normalizeTextValue(
-      getPrimary(config, hass, stateObject, read)
+    label: normalizeTextValue(
+      getLabel(config, hass, stateObject, showUnit, read)
     ),
-    secondary: normalizeTextValue(getSecondary(config, stateObject, read)),
+    name: normalizeTextValue(getName(config, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
     entityPicture: normalizeTextValue(
       !hasConfiguredIcon(config) && showEntityPicture ? stateObject?.attributes?.entity_picture : ""
     ),
     showIcon: readBooleanValue(config.show_icon, true, context),
-    showPrimary: readBooleanValue(
-      config.show_primary ?? config.show_label,
-      true,
-      context
-    ),
-    showSecondary: readBooleanValue(
-      config.show_secondary ?? config.show_name,
-      true,
-      context
-    ),
+    showLabel: readBooleanValue(config.show_label, true, context),
+    showName: readBooleanValue(config.show_name, true, context),
     styleVariables: getBadgeStyleVariables(config, context)
   };
 }
@@ -342,12 +335,12 @@ var BADGE_STYLES = `
 
 // src/badge-renderer.js
 function createTextMarkup(model) {
-  const secondaryMarkup = model.showSecondary && model.secondary ? `<span class="label">${decodeAndEscapeHtml(model.secondary)}</span>` : "";
-  const primaryMarkup = model.showPrimary && model.primary ? `<span class="content">${decodeAndEscapeHtml(model.primary)}</span>` : "";
-  if (!secondaryMarkup && !primaryMarkup) {
+  const nameMarkup = model.showName && model.name ? `<span class="label">${decodeAndEscapeHtml(model.name)}</span>` : "";
+  const labelMarkup = model.showLabel && model.label ? `<span class="content">${decodeAndEscapeHtml(model.label)}</span>` : "";
+  if (!nameMarkup && !labelMarkup) {
     return "";
   }
-  return `<span class="info">${secondaryMarkup}${primaryMarkup}</span>`;
+  return `<span class="info">${nameMarkup}${labelMarkup}</span>`;
 }
 function appendBadgeVisual(iconContainer, model, hass) {
   if (model.entityPicture) {

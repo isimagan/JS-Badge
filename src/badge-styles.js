@@ -4,7 +4,7 @@ import { readStyleValue } from "./value-helpers.js";
 export function getBadgeStyleVariables(config, context) {
   return {
     "--js-badge-icon-color": readStyleValue(
-      config.icon_color ?? config.color,
+      config.color,
       DEFAULT_STYLES.iconColor,
       context,
     ),

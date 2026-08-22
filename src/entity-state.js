@@ -6,7 +6,12 @@ export function getStateObject(config, hass) {
   return hass.states[config.entity];
 }
 
-export function formatEntityState(config, hass, stateObject) {
+export function formatEntityState(
+  config,
+  hass,
+  stateObject,
+  showUnit = config.show_unit !== false,
+) {
   if (!stateObject) {
     return config.entity ? "Entity not found" : "";
   }
@@ -14,7 +19,7 @@ export function formatEntityState(config, hass, stateObject) {
   const state = stateObject.state ?? "";
   const unit = stateObject.attributes?.unit_of_measurement;
 
-  if (config.show_unit === false && unit) {
+  if (!showUnit && unit) {
     return state;
   }
 
