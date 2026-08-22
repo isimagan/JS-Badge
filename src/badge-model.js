@@ -11,8 +11,8 @@ function createContext(config, hass, stateObject) {
   return { config, hass, stateObject };
 }
 
-function getPrimary(config, hass, stateObject, read) {
-  const value = config.primary ?? config.label;
+function getLabel(config, hass, stateObject, read) {
+  const value = config.label;
 
   if (value !== undefined) {
     return read(value);
@@ -21,9 +21,8 @@ function getPrimary(config, hass, stateObject, read) {
   return formatEntityState(config, hass, stateObject);
 }
 
-function getSecondary(config, stateObject, read) {
+function getName(config, stateObject, read) {
   const value =
-    config.secondary ??
     config.name ??
     stateObject?.attributes?.friendly_name ??
     config.entity ??
@@ -59,10 +58,8 @@ export function createBadgeModel(config, hass) {
       context,
       "show_badge",
     ),
-    primary: normalizeTextValue(
-      getPrimary(config, hass, stateObject, read),
-    ),
-    secondary: normalizeTextValue(getSecondary(config, stateObject, read)),
+    label: normalizeTextValue(getLabel(config, hass, stateObject, read)),
+    name: normalizeTextValue(getName(config, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
     entityPicture: normalizeTextValue(
       !hasConfiguredIcon(config) && showEntityPicture
@@ -70,16 +67,8 @@ export function createBadgeModel(config, hass) {
         : "",
     ),
     showIcon: readBooleanValue(config.show_icon, true, context),
-    showPrimary: readBooleanValue(
-      config.show_primary ?? config.show_label,
-      true,
-      context,
-    ),
-    showSecondary: readBooleanValue(
-      config.show_secondary ?? config.show_name,
-      true,
-      context,
-    ),
+    showLabel: readBooleanValue(config.show_label, true, context),
+    showName: readBooleanValue(config.show_name, true, context),
     styleVariables: getBadgeStyleVariables(config, context),
   };
 }

@@ -3,21 +3,21 @@ import { BADGE_STYLES } from "./styles.js";
 import { decodeAndEscapeHtml } from "./value-helpers.js";
 
 function createTextMarkup(model) {
-  const secondaryMarkup =
-    model.showSecondary && model.secondary
-      ? `<span class="label">${decodeAndEscapeHtml(model.secondary)}</span>`
+  const nameMarkup =
+    model.showName && model.name
+      ? `<span class="label">${decodeAndEscapeHtml(model.name)}</span>`
       : "";
 
-  const primaryMarkup =
-    model.showPrimary && model.primary
-      ? `<span class="content">${decodeAndEscapeHtml(model.primary)}</span>`
+  const labelMarkup =
+    model.showLabel && model.label
+      ? `<span class="content">${decodeAndEscapeHtml(model.label)}</span>`
       : "";
 
-  if (!secondaryMarkup && !primaryMarkup) {
+  if (!nameMarkup && !labelMarkup) {
     return "";
   }
 
-  return `<span class="info">${secondaryMarkup}${primaryMarkup}</span>`;
+  return `<span class="info">${nameMarkup}${labelMarkup}</span>`;
 }
 
 export function appendBadgeVisual(iconContainer, model, hass) {

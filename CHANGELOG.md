@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Simplified the public parameters to use `name`, `label`, `show_name`,
+  `show_label` and `color`.
+- Replaced the README with a shorter, user-focused guide and added a
+  JavaScript-support column to the parameter table.
+
+### Removed
+
+- Removed `primary`, `secondary`, `show_primary`, `show_secondary` and
+  `icon_color` configuration aliases.
+
 ## v1.2.0
 
 ### Added
