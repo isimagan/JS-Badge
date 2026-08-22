@@ -5,13 +5,13 @@ function getStateObject(config, hass) {
   }
   return hass.states[config.entity];
 }
-function formatEntityState(config, hass, stateObject) {
+function formatEntityState(config, hass, stateObject, showUnit = config.show_unit !== false) {
   if (!stateObject) {
     return config.entity ? "Entity not found" : "";
   }
   const state = stateObject.state ?? "";
   const unit = stateObject.attributes?.unit_of_measurement;
-  if (config.show_unit === false && unit) {
+  if (!showUnit && unit) {
     return state;
   }
   if (hass?.formatEntityState) {
@@ -165,12 +165,12 @@ function applyBadgeStyles(badge, styleVariables) {
 function createContext(config, hass, stateObject) {
   return { config, hass, stateObject };
 }
-function getLabel(config, hass, stateObject, read) {
+function getLabel(config, hass, stateObject, showUnit, read) {
   const value = config.label;
   if (value !== void 0) {
     return read(value);
   }
-  return formatEntityState(config, hass, stateObject);
+  return formatEntityState(config, hass, stateObject, showUnit);
 }
 function getName(config, stateObject, read) {
   const value = config.name ?? stateObject?.attributes?.friendly_name ?? config.entity ?? "";
@@ -192,6 +192,7 @@ function createBadgeModel(config, hass) {
     true,
     context
   );
+  const showUnit = readBooleanValue(config.show_unit, true, context);
   return {
     stateObject,
     showBadge: readStrictBooleanValue(
@@ -200,7 +201,9 @@ function createBadgeModel(config, hass) {
       context,
       "show_badge"
     ),
-    label: normalizeTextValue(getLabel(config, hass, stateObject, read)),
+    label: normalizeTextValue(
+      getLabel(config, hass, stateObject, showUnit, read)
+    ),
     name: normalizeTextValue(getName(config, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
     entityPicture: normalizeTextValue(

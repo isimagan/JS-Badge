@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+import { createBadgeModel } from "../src/badge-model.js";
 import { formatEntityState } from "../src/entity-state.js";
 
 const visitors = {
@@ -13,6 +14,9 @@ const visitors = {
 };
 
 const hass = {
+  states: {
+    [visitors.entity_id]: visitors,
+  },
   formatEntityState(stateObject) {
     return `${stateObject.state} ${stateObject.attributes.unit_of_measurement}`;
   },
@@ -20,6 +24,26 @@ const hass = {
 
 test("show_unit defaults to true", () => {
   assert.equal(formatEntityState({}, hass, visitors), "4 visitors");
+});
+
+test("show_unit accepts a JavaScript template", () => {
+  const hiddenUnit = createBadgeModel(
+    {
+      entity: visitors.entity_id,
+      show_unit: "[[[ return false; ]]]",
+    },
+    hass,
+  );
+  const visibleUnit = createBadgeModel(
+    {
+      entity: visitors.entity_id,
+      show_unit: "[[[ return true; ]]]",
+    },
+    hass,
+  );
+
+  assert.equal(hiddenUnit.label, "4");
+  assert.equal(visibleUnit.label, "4 visitors");
 });
 
 test("show_unit false removes the unit from the default state", () => {

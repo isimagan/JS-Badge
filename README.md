@@ -35,8 +35,8 @@ entity icon, followed by the entity name and formatted state.
 
 ## Parameters
 
-The JavaScript column shows whether the parameter accepts a
-`[[[ return ... ]]]` template directly.
+The JavaScript column shows whether the parameter supports
+`[[[ return ... ]]]` templates.
 
 | Parameter | Default | Description | JavaScript |
 | --- | --- | --- | :---: |
@@ -52,11 +52,11 @@ The JavaScript column shows whether the parameter accepts a
 | `show_icon` | `true` | Show the picture or icon | ✅ |
 | `show_name` | `true` | Show the name | ✅ |
 | `show_label` | `true` | Show the label | ✅ |
-| `show_unit` | `true` | Show the unit of measurement | ❌ |
+| `show_unit` | `true` | Show the unit of measurement | ✅ |
 | `show_badge` | `true` | Show the entire badge | ✅ |
-| `tap_action` | `more-info` | Action when tapped | ❌ |
-| `hold_action` | `none` | Action when held | ❌ |
-| `double_tap_action` | `none` | Action when double-tapped | ❌ |
+| `tap_action` | `more-info` | Action when tapped | ✅ |
+| `hold_action` | `none` | Action when held | ✅ |
+| `double_tap_action` | `none` | Action when double-tapped | ✅ |
 
 ## Entity picture and icon
 

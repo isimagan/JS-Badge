@@ -10,6 +10,7 @@ All notable changes to this project are documented in this file.
   `show_label` and `color`.
 - Replaced the README with a shorter, user-focused guide and added a
   JavaScript-support column to the parameter table.
+- Added JavaScript template support to `show_unit`.
 
 ### Removed
 

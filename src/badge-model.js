@@ -11,14 +11,14 @@ function createContext(config, hass, stateObject) {
   return { config, hass, stateObject };
 }
 
-function getLabel(config, hass, stateObject, read) {
+function getLabel(config, hass, stateObject, showUnit, read) {
   const value = config.label;
 
   if (value !== undefined) {
     return read(value);
   }
 
-  return formatEntityState(config, hass, stateObject);
+  return formatEntityState(config, hass, stateObject, showUnit);
 }
 
 function getName(config, stateObject, read) {
@@ -49,6 +49,7 @@ export function createBadgeModel(config, hass) {
     true,
     context,
   );
+  const showUnit = readBooleanValue(config.show_unit, true, context);
 
   return {
     stateObject,
@@ -58,7 +59,9 @@ export function createBadgeModel(config, hass) {
       context,
       "show_badge",
     ),
-    label: normalizeTextValue(getLabel(config, hass, stateObject, read)),
+    label: normalizeTextValue(
+      getLabel(config, hass, stateObject, showUnit, read),
+    ),
     name: normalizeTextValue(getName(config, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
     entityPicture: normalizeTextValue(
