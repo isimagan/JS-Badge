@@ -180,10 +180,18 @@ function getIcon(config, stateObject, read) {
   const value = config.icon ?? stateObject?.attributes?.icon ?? "";
   return read(value);
 }
+function hasConfiguredIcon(config) {
+  return config.icon !== void 0 && config.icon !== null;
+}
 function createBadgeModel(config, hass) {
   const stateObject = getStateObject(config, hass);
   const context = createContext(config, hass, stateObject);
   const read = (value) => readValue(value, context);
+  const showEntityPicture = readBooleanValue(
+    config.show_entity_picture,
+    true,
+    context
+  );
   return {
     stateObject,
     showBadge: readStrictBooleanValue(
@@ -197,6 +205,9 @@ function createBadgeModel(config, hass) {
     ),
     secondary: normalizeTextValue(getSecondary(config, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
+    entityPicture: normalizeTextValue(
+      !hasConfiguredIcon(config) && showEntityPicture ? stateObject?.attributes?.entity_picture : ""
+    ),
     showIcon: readBooleanValue(config.show_icon, true, context),
     showPrimary: readBooleanValue(
       config.show_primary ?? config.show_label,
@@ -319,6 +330,14 @@ var BADGE_STYLES = `
     --mdc-icon-size: var(--ha-badge-icon-size, 18px);
     color: var(--badge-color);
   }
+
+  .entity-picture {
+    display: block;
+    width: var(--ha-badge-icon-size, 18px);
+    height: var(--ha-badge-icon-size, 18px);
+    border-radius: 50%;
+    object-fit: cover;
+  }
 `;
 
 // src/badge-renderer.js
@@ -330,7 +349,16 @@ function createTextMarkup(model) {
   }
   return `<span class="info">${secondaryMarkup}${primaryMarkup}</span>`;
 }
-function appendIcon(iconContainer, model, hass) {
+function appendBadgeVisual(iconContainer, model, hass) {
+  if (model.entityPicture) {
+    const pictureElement = document.createElement("img");
+    pictureElement.className = "entity-picture";
+    pictureElement.setAttribute("src", model.entityPicture);
+    pictureElement.setAttribute("alt", "");
+    pictureElement.setAttribute("aria-hidden", "true");
+    iconContainer.appendChild(pictureElement);
+    return;
+  }
   if (model.icon) {
     const iconElement = document.createElement("ha-icon");
     iconElement.setAttribute("icon", model.icon);
@@ -368,7 +396,7 @@ function renderBadge(shadowRoot, model, hass) {
     iconContainer.remove();
     return badge;
   }
-  appendIcon(iconContainer, model, hass);
+  appendBadgeVisual(iconContainer, model, hass);
   return badge;
 }
 

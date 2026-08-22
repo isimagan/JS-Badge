@@ -20,7 +20,17 @@ function createTextMarkup(model) {
   return `<span class="info">${secondaryMarkup}${primaryMarkup}</span>`;
 }
 
-function appendIcon(iconContainer, model, hass) {
+export function appendBadgeVisual(iconContainer, model, hass) {
+  if (model.entityPicture) {
+    const pictureElement = document.createElement("img");
+    pictureElement.className = "entity-picture";
+    pictureElement.setAttribute("src", model.entityPicture);
+    pictureElement.setAttribute("alt", "");
+    pictureElement.setAttribute("aria-hidden", "true");
+    iconContainer.appendChild(pictureElement);
+    return;
+  }
+
   if (model.icon) {
     const iconElement = document.createElement("ha-icon");
     iconElement.setAttribute("icon", model.icon);
@@ -67,6 +77,6 @@ export function renderBadge(shadowRoot, model, hass) {
     return badge;
   }
 
-  appendIcon(iconContainer, model, hass);
+  appendBadgeVisual(iconContainer, model, hass);
   return badge;
 }
