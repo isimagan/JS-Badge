@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## v2.0.1
+
+### Added
+
+- Added an automated release pipeline that tests and rebuilds the badge,
+  verifies all version files, and publishes the matching GitHub release.
+
 ## v2.0.0
 
 ### Changed

@@ -160,6 +160,13 @@ double_tap_action:
 
 JavaScript templates run in your browser. Only use templates you trust.
 
+## Development and releases
+
+Run `npm test` and `npm run build` before committing changes. A version change
+on `master` starts the release workflow, which repeats the tests and build,
+checks that `package.json`, `package-lock.json`, `version.json` and the committed
+bundle agree, and then publishes the matching `vX.Y.Z` GitHub release.
+
 ## License
 
 MIT
