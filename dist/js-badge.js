@@ -172,8 +172,8 @@ function getLabel(config, hass, stateObject, showUnit, read) {
   }
   return formatEntityState(config, hass, stateObject, showUnit);
 }
-function getName(config, stateObject, read) {
-  const value = config.name ?? stateObject?.attributes?.friendly_name ?? config.entity ?? "";
+function getName(config, hass, stateObject, read) {
+  const value = config.name ?? (stateObject ? hass?.formatEntityName?.(stateObject) : void 0) ?? stateObject?.attributes?.friendly_name ?? config.entity ?? "";
   return read(value);
 }
 function getIcon(config, stateObject, read) {
@@ -204,7 +204,7 @@ function createBadgeModel(config, hass) {
     label: normalizeTextValue(
       getLabel(config, hass, stateObject, showUnit, read)
     ),
-    name: normalizeTextValue(getName(config, stateObject, read)),
+    name: normalizeTextValue(getName(config, hass, stateObject, read)),
     icon: normalizeTextValue(getIcon(config, stateObject, read)),
     entityPicture: normalizeTextValue(
       !hasConfiguredIcon(config) && showEntityPicture ? stateObject?.attributes?.entity_picture : ""

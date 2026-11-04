@@ -20,6 +20,9 @@ const hass = {
   formatEntityState() {
     return "4 visitors";
   },
+  formatEntityName() {
+    return "Office · Example sensor";
+  },
 };
 
 test("name, label, visibility and color parameters are supported", () => {
@@ -55,7 +58,7 @@ test("removed aliases no longer affect the badge", () => {
     hass,
   );
 
-  assert.equal(model.name, "Example sensor");
+  assert.equal(model.name, "Office · Example sensor");
   assert.equal(model.label, "4 visitors");
   assert.equal(model.showName, true);
   assert.equal(model.showLabel, true);
@@ -63,4 +66,12 @@ test("removed aliases no longer affect the badge", () => {
     model.styleVariables["--js-badge-icon-color"],
     DEFAULT_STYLES.iconColor,
   );
+});
+
+test("falls back to the friendly name on older Home Assistant versions", () => {
+  const model = createBadgeModel(
+    { entity: stateObject.entity_id },
+    { states: hass.states, formatEntityState: hass.formatEntityState },
+  );
+  assert.equal(model.name, "Example sensor");
 });
