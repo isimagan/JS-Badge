@@ -22,7 +22,7 @@ function formatEntityState(config, hass, stateObject, showUnit = config.show_uni
 
 // version.json
 var version_default = {
-  version: "2.0.1"
+  version: "2.0.2"
 };
 
 // src/constants.js

@@ -1,6 +1,7 @@
 {
   "name": "js-badge",
   "version": "2.0.2",
+  "description": "A Home Assistant badge with client-side JavaScript templates.",
   "private": true,
   "type": "module",
   "scripts": {
