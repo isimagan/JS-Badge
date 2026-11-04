@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file.
 
+## v2.0.2
+
+### Changed
+
+- Default badge names now use Home Assistant's entity-name formatter so they
+  include the same device and area context as built-in badges in 2026.11.
+- Older Home Assistant versions continue to use the friendly-name fallback.
+
 ## v2.0.1
 
 ### Added
